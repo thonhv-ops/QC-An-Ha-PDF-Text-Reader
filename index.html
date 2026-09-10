@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>QC PDF Text Reader</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>QC PDF Text Reader</h1>
+
+        <p>Đọc toàn bộ text và tọa độ từ PDF</p>
+
+        <input type="file" id="pdfFile" accept=".pdf">
+
+        <button id="extractBtn">
+            Extract PDF
+        </button>
+
+        <button id="exportBtn" disabled>
+            Export Excel
+        </button>
+
+        <div id="status">
+            Chưa chọn PDF
+        </div>
+
+        <div id="result"></div>
+
+    </div>
+
+
+    <!-- PDF.js -->
+    <script type="module">
+
+        import * as pdfjsLib from
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.54/pdf.min.mjs";
+
+        window.pdfjsLib = pdfjsLib;
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.54/pdf.worker.min.mjs";
+
+    </script>
+
+
+    <!-- SheetJS: dùng để xuất Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+
+    <!-- Code xử lý chính -->
+    <script src="app.js"></script>
+
+</body>
+
+</html>
