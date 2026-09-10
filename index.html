@@ -1,63 +1,67 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>QC PDF Text Reader</title>
-
+    <title>QC Weld Map Lookup</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
     <div class="container">
+        <h1>QC Weld Map Lookup</h1>
+        <p>Tra vi tri moi han tu PDF theo danh sach Excel</p>
 
-        <h1>QC PDF Text Reader</h1>
+        <section class="panel">
+            <h2>1. PDF ban ve</h2>
+            <input type="file" id="pdfFile" accept=".pdf">
+            <button id="extractBtn">Doc PDF</button>
+        </section>
 
-        <p>Đọc toàn bộ text và tọa độ từ PDF</p>
+        <section class="panel">
+            <h2>2. Excel danh sach moi han</h2>
 
-        <input type="file" id="pdfFile" accept=".pdf">
+            <label for="excelFile">File Excel</label>
+            <input type="file" id="excelFile" accept=".xlsx,.xls">
 
-        <button id="extractBtn">
-            Extract PDF
-        </button>
+            <div class="settings">
+                <div>
+                    <label for="sheetName">Ten Sheet</label>
+                    <input type="text" id="sheetName" placeholder="Vi du: Weld List">
+                </div>
 
-        <button id="exportBtn" disabled>
-            Export Excel
-        </button>
+                <div>
+                    <label for="weldColumn">Cot ten moi han</label>
+                    <input type="text" id="weldColumn" value="A" placeholder="Vi du: A">
+                </div>
 
-        <div id="status">
-            Chưa chọn PDF
-        </div>
+                <div>
+                    <label for="startRow">Dong bat dau</label>
+                    <input type="number" id="startRow" value="2" min="1">
+                </div>
+            </div>
 
+            <button id="lookupBtn" disabled>Tra cuu</button>
+            <button id="exportBtn" disabled>Export Excel</button>
+        </section>
+
+        <div id="status">Chua chon file</div>
         <div id="result"></div>
-
     </div>
-
 
     <!-- PDF.js -->
     <script type="module">
-
         import * as pdfjsLib from
             "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.54/pdf.min.mjs";
 
         window.pdfjsLib = pdfjsLib;
-
         pdfjsLib.GlobalWorkerOptions.workerSrc =
             "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.54/pdf.worker.min.mjs";
-
     </script>
 
-
-    <!-- SheetJS: dùng để xuất Excel -->
+    <!-- SheetJS -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 
-
-    <!-- Code xử lý chính -->
-    <script src="app.js"></script>
-
+    <!-- Main app -->
+    <script type="module" src="app.js"></script>
 </body>
-
 </html>
