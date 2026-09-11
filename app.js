@@ -2,6 +2,7 @@ const pdfFile = document.getElementById("pdfFile");
 const excelFile = document.getElementById("excelFile");
 
 const extractBtn = document.getElementById("extractBtn");
+const exportPdfBtn = document.getElementById("exportPdfBtn");
 const lookupBtn = document.getElementById("lookupBtn");
 const exportBtn = document.getElementById("exportBtn");
 
@@ -55,6 +56,7 @@ extractBtn.addEventListener("click", async function () {
 
 
     extractBtn.disabled = true;
+    exportPdfBtn.disabled = true;
     lookupBtn.disabled = true;
     exportBtn.disabled = true;
 
@@ -142,6 +144,7 @@ extractBtn.addEventListener("click", async function () {
             " text.";
 
 
+        exportPdfBtn.disabled = pdfRows.length === 0;
         updateLookupButton();
 
     }
@@ -151,6 +154,7 @@ extractBtn.addEventListener("click", async function () {
 
 
         pdfRows = [];
+        exportPdfBtn.disabled = true;
 
 
         status.textContent =
@@ -168,6 +172,94 @@ extractBtn.addEventListener("click", async function () {
     }
 
 });
+
+
+exportPdfBtn.addEventListener(
+    "click",
+    function () {
+
+        try {
+
+            if (!pdfRows.length) {
+
+                throw new Error(
+                    "Chua co du lieu PDF de xuat Excel."
+                );
+
+            }
+
+
+            const exportRows = [
+                [
+                    "Trang",
+                    "Text",
+                    "X",
+                    "Y"
+                ],
+                ...pdfRows.map(
+                    function (row) {
+
+                        return [
+                            row[0] ?? "",
+                            row[1] ?? "",
+                            row[2] ?? "",
+                            row[3] ?? ""
+                        ];
+
+                    }
+                )
+            ];
+
+
+            const worksheet =
+                XLSX.utils.aoa_to_sheet(
+                    exportRows
+                );
+
+
+            const workbook =
+                XLSX.utils.book_new();
+
+
+            XLSX.utils.book_append_sheet(
+                workbook,
+                worksheet,
+                "PDFText"
+            );
+
+
+            const fileName =
+                (
+                    pdfFileName
+                        ? removeExtension(pdfFileName)
+                        : "pdf-text"
+                ) +
+                "_text.xlsx";
+
+
+            XLSX.writeFile(
+                workbook,
+                fileName
+            );
+
+
+            status.textContent =
+                "Da xuat du lieu PDF: " +
+                fileName;
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            status.textContent =
+                "Loi xuat du lieu PDF: " +
+                error.message;
+
+        }
+
+    }
+);
 
 
 /* =========================================================
