@@ -1352,8 +1352,85 @@ function findByCompoundRule(
 
 
     /*
+        RULE 2: PDF gom nhieu moi han trong ngoac.
+
+        Vi du:
+
+        PDF:   16-(99,100,101,102)
+        Excel: 16-(100)
+
+        Hoac:
+
+        PDF:   8a-(1,2,3)
+        Excel: 8a-(2)
+    */
+
+    for (
+        let rowIndex = 0;
+        rowIndex < pdfRows.length;
+        rowIndex++
+    ) {
+
+        const pdfKey =
+            keyOf(
+                pdfRows[
+                    rowIndex
+                ]?.[
+                    keyColumn
+                ]
+            );
+
+
+        const pdfGroup =
+            splitParenthesizedListKey(
+                pdfKey
+            );
+
+
+        if (!pdfGroup) {
+            continue;
+        }
+
+
+        const sourceGroup =
+            splitParenthesizedListKey(
+                sourceKey
+            );
+
+
+        if (
+            !sourceGroup
+            ||
+            !sameKey(
+                pdfGroup.prefix,
+                sourceGroup.prefix
+            )
+        ) {
+            continue;
+        }
+
+
+        if (
+            pdfGroup.items.some(
+                function (item) {
+
+                    return sameKey(
+                        item,
+                        sourceGroup.items[0]
+                    );
+
+                }
+            )
+        ) {
+            return rowIndex;
+        }
+
+    }
+
+
+    /*
         ==============================================
-        RULE 2
+        RULE 3
 
         PDF:
 
@@ -2147,5 +2224,59 @@ function escapeHtml(value) {
         /'/g,
         "&#039;"
     );
+
+}
+
+
+function splitParenthesizedListKey(value) {
+
+    const text =
+        keyOf(value);
+
+
+    const match =
+        text.match(
+            /^(.+?)\s*-\s*\(([^()]*)\)$/
+        );
+
+
+    if (!match) {
+        return null;
+    }
+
+
+    const items =
+        match[2]
+            .split(",")
+            .map(
+                function (item) {
+
+                    return item.trim();
+
+                }
+            )
+            .filter(
+                function (item) {
+
+                    return item !== "";
+
+                }
+            );
+
+
+    if (!items.length) {
+        return null;
+    }
+
+
+    return {
+
+        prefix:
+            match[1].trim(),
+
+        items:
+            items
+
+    };
 
 }
